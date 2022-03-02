@@ -51,4 +51,29 @@ We'll want a custom environment in for our own modules. Let's call it "mlops":
     python -m ipykernel install --user --name mlops --display-name "Python (mlops)"
     conda install -y -c conda-forge papermill
    
+You can also install all of this via pip and normal venvs in python.
   
+## Overview of the Notebook
+  
+This is simple movie recommender and characteristic of how learning and development happen in the world of ML.  We use notebooks to explore the data, we build code, we verify it works and then... we want to scale it using our HPC.
+  
+But what's the best way to scale up.  HPC is all about batch.  It's not interactive.  Do we have to refactor and modularize?  Do we save out the python code?
+  
+Wouldn't it be nice if we could just call our notebook like any other python function...
+  
+## Enter the papermill
+  
+[Papermill](https://papermill.readthedocs.io/en/latest/) is a notebook wrapper that lets us pass parameters and save results all with a simple CLI or python function call.  Simply by tagging a cell of our notebook with "parameters" we can have papermill inject parameter values and run the notebook.  
+
+We can easily run our notebook with different values for the parameters. The run also preserves the output which provides a good record of our run. Then we can look at the output as part of our record of execution and specific parameter runs.
+
+    papermill \
+        -p movie_ratings "ml-latest-small/ratings.csv" \
+        -p challenge_length 5 \
+        -p trainfraction 1.0 \
+        movie_rec.ipynb \
+        results/movie_rec_5_1.0.ipynb
+
+Yay, the beginnings of MLOps!
+
+Now we need to automate...
